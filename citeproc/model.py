@@ -1,5 +1,6 @@
 
 import re
+import traceback
 import unicodedata
 import os
 
@@ -1460,8 +1461,13 @@ class If(CitationStylesElement, Parent):
             date_variable = date.replace('-', '_')
             try:
                 circa = item.reference[date_variable].get('circa', False)
-            except VariableError:
+            except AttributeError:
                 circa = False
+            except Exception as err:
+                circa = False
+                print(traceback.format_exc())
+                print(item)
+
             result.append(circa)
         return result
 
