@@ -624,8 +624,9 @@ class Layout(CitationStylesElement, Parent, Formatted, Affixed, Delimited):
         for item in citation_items:
             self.repressed = {}
             text = self.format(self.wrap(self.render_children(item)))
-            if text is not None:
-                output_items.append(text)
+            if text is None:
+                text = ""
+            output_items.append(text)
         return output_items
 
 
