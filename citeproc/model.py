@@ -1,5 +1,6 @@
 
 import re
+import traceback
 import unicodedata
 import os
 
@@ -623,8 +624,9 @@ class Layout(CitationStylesElement, Parent, Formatted, Affixed, Delimited):
         for item in citation_items:
             self.repressed = {}
             text = self.format(self.wrap(self.render_children(item)))
-            if text is not None:
-                output_items.append(text)
+            if text is None:
+                text = ""
+            output_items.append(text)
         return output_items
 
 
@@ -1460,8 +1462,13 @@ class If(CitationStylesElement, Parent):
             date_variable = date.replace('-', '_')
             try:
                 circa = item.reference[date_variable].get('circa', False)
-            except VariableError:
+            except AttributeError:
                 circa = False
+            except Exception as err:
+                circa = False
+                print(traceback.format_exc())
+                print(item)
+
             result.append(circa)
         return result
 
